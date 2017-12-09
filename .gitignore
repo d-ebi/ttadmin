@@ -1,4 +1,6 @@
 !.gitkeep
 *__pycache__*
 settings.py
-ssh.lnk
+ttadmin.lnk
+settings_error.log
+execute_error.log
