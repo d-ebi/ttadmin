@@ -1,0 +1,4 @@
+!.gitkeep
+*__pycache__*
+settings.py
+ssh.lnk

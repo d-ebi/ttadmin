@@ -1,0 +1,60 @@
+;==============================================================================
+; 引数
+;==============================================================================
+; IPアドレスないしホスト名
+host=params[2]
+; ポート番号
+ssh_port=params[3]
+; ユーザ名
+user=params[4]
+; 認証方式
+authentication=params[5]
+; パスワードないしキーファイルの場所
+password_or_key=params[6]
+
+;==============================================================================
+; ログイン方法の設定
+;==============================================================================
+login_method=''
+STRCOMPARE authentication 'password'
+IF result = 0 THEN
+    login_method='password'
+ELSE
+    login_method='publickey'
+ENDIF
+
+;==============================================================================
+; 接続の実行
+;==============================================================================
+command = host
+STRCONCAT command ':'
+STRCONCAT command ssh_port
+STRCONCAT command '/ssh /2 /auth='
+STRCONCAT command login_method
+STRCONCAT command ' /user='
+STRCONCAT command user
+
+STRCOMPARE authentication 'password'
+if result = 0 then
+    STRCONCAT command ' /passwd='
+    STRCONCAT command password_or_key
+else
+    STRCONCAT command ' /keyfile='
+    STRCONCAT command password_or_key
+endif
+
+CONNECT command
+
+WAIT '$' '#'
+
+;==============================================================================
+; 追加コマンドの実行
+;==============================================================================
+IF paramcnt>6 THEN
+    FOR i 7 paramcnt
+        SENDLN params[i]
+        WAIT 'パスワード:' 'password:' ']#' ']$'
+    NEXT
+ENDIF
+
+END
